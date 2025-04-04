@@ -1,0 +1,185 @@
+{
+  "name": "Webflow CMS - Basic Operations",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5f5fb0fa-32b7-42e1-b20b-cda3330edf79",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "name",
+              "value": "Test Item Created with n8n"
+            },
+            {
+              "name": "slug",
+              "value": "test-item-n8n"
+            },
+            {
+              "name": "description",
+              "value": "This is a test item created with the n8n Webflow CMS node."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c246bafe-2eff-42ec-8e8d-0bae2f98ce38",
+      "name": "Item Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "siteId": "YOUR_SITE_ID",
+        "collectionId": "YOUR_COLLECTION_ID",
+        "live": false,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "slug",
+              "fieldValue": "={{ $json.slug }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $json.description }}"
+            }
+          ]
+        }
+      },
+      "id": "f1b5e4c8-1c5a-41c5-a21d-cd7b5a9d0e39",
+      "name": "Webflow CMS - Create",
+      "type": "n8n-nodes-webflow-cms.webflowCms",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "webflowApi": "YOUR_WEBFLOW_CREDENTIALS_NAME"
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "name",
+              "value": "Updated Test Item"
+            },
+            {
+              "name": "description",
+              "value": "This item has been updated with the n8n Webflow CMS node."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d1e67ba9-fc9a-4a85-8957-e9b6a4c9e9f2",
+      "name": "Update Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "siteId": "YOUR_SITE_ID",
+        "collectionId": "YOUR_COLLECTION_ID",
+        "itemId": "={{ $node[\"Webflow CMS - Create\"].json.itemId || $node[\"Webflow CMS - Create\"].json._id }}",
+        "live": false,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $json.description }}"
+            }
+          ]
+        }
+      },
+      "id": "b2c6d7e8-9f10-11eb-bc83-0242ac130003",
+      "name": "Webflow CMS - Update",
+      "type": "n8n-nodes-webflow-cms.webflowCms",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ],
+      "credentials": {
+        "webflowApi": "YOUR_WEBFLOW_CREDENTIALS_NAME"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Item Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Data": {
+      "main": [
+        [
+          {
+            "node": "Webflow CMS - Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webflow CMS - Create": {
+      "main": [
+        [
+          {
+            "node": "Update Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Data": {
+      "main": [
+        [
+          {
+            "node": "Webflow CMS - Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
